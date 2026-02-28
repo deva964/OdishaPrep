@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loading... — OdishaPrep</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --saffron: #FF6B00;
+  --saffron-light: #FF9A4D;
+  --green: #1A7A4A;
+  --green-light: #25A86A;
+  --white: #FAFAF8;
+  --dark: #0D0D0D;
+  --dark2: #151515;
+  --dark3: #1E1E1E;
+  --gold: #F5C842;
+  --text: #E8E6E0;
+  --muted: #7A7870;
+  --border: rgba(255,255,255,0.06);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Sora',sans-serif;overflow-x:hidden;cursor:none;}
+
+/* Cursor */
+.cursor{position:fixed;width:10px;height:10px;background:var(--saffron);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cursor-ring{position:fixed;width:32px;height:32px;border:1.5px solid rgba(255,107,0,0.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+
+/* Reading progress */
+.reading-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--saffron),var(--gold));z-index:9997;width:0%;transition:width .1s;}
+
+/* Noise */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:8999;opacity:.6;}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,13,13,0.95);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:12px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.back-btn{
+  display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  transition:color .2s;padding:0;
+}
+.back-btn:hover{color:var(--saffron);}
+.back-btn::before{content:'←';font-size:16px;}
+.topbar-logo{
+  font-family:'Sora',sans-serif;font-size:18px;
+  font-weight:800;color:var(--white);
+  letter-spacing:-.5px;cursor:pointer;
+  text-decoration:none;
+}
+.topbar-logo span{color:var(--saffron);}
+.share-btn{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--saffron);background:none;
+  border:1px solid rgba(255,107,0,0.3);
+  padding:7px 16px;cursor:pointer;transition:all .2s;
+  border-radius:4px;
+}
+.share-btn:hover{background:var(--saffron);color:var(--dark);}
+
+/* ===== ARTICLE HERO ===== */
+.article-hero{
+  position:relative;min-height:380px;
+  display:flex;align-items:flex-end;overflow:hidden;
+}
+.hero-bg-layer{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg, #0D0D0D 0%, #1a0800 40%, #0D0D0D 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,107,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,0,0.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse at 30% 60%,black 20%,transparent 70%);
+}
+.hero-glow{
+  position:absolute;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(255,107,0,0.12),transparent 70%);
+  top:-20%;left:-10%;
+}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,13,0.98) 0%,rgba(13,13,13,0.4) 100%);}
+.hero-content{
+  position:relative;z-index:2;
+  padding:48px 32px;max-width:900px;
+  animation:fadeUp .7s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+.article-eyebrow{
+  display:flex;align-items:center;gap:12px;margin-bottom:16px;
+}
+.article-cat{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;
+  padding:4px 12px;border-radius:3px;font-weight:700;
+}
+.cat-opsc{background:rgba(255,107,0,0.15);color:var(--saffron);border:1px solid rgba(255,107,0,0.3);}
+.cat-ossc{background:rgba(37,168,106,0.15);color:var(--green-light);border:1px solid rgba(37,168,106,0.3);}
+.cat-osssc{background:rgba(245,200,66,0.15);color:var(--gold);border:1px solid rgba(245,200,66,0.3);}
+.cat-general{background:rgba(96,165,250,0.15);color:#60a5fa;border:1px solid rgba(96,165,250,0.3);}
+.article-imp{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.1em;color:var(--muted);
+}
+
+.article-title{
+  font-family:'Sora',sans-serif;
+  font-size:clamp(22px,4vw,42px);
+  font-weight:800;line-height:1.15;
+  letter-spacing:-1px;color:var(--white);
+  margin-bottom:16px;
+}
+
+.article-meta{
+  display:flex;align-items:center;gap:16px;
+  flex-wrap:wrap;
+}
+.meta-item{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--muted);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.meta-dot{color:rgba(255,255,255,0.15);}
+
+/* ===== ARTICLE BODY ===== */
+.article-wrap{
+  max-width:1100px;margin:0 auto;
+  padding:48px 32px;
+  display:grid;
+  grid-template-columns:1fr 300px;
+  gap:48px;align-items:start;
+}
+
+/* Article Text */
+.article-text p{
+  font-size:17px;line-height:1.9;
+  color:#ccc8c0;font-weight:300;
+  margin-bottom:22px;
+}
+.article-text p.drop-cap::first-letter{
+  font-family:'Sora',sans-serif;
+  font-size:64px;font-weight:800;
+  float:left;line-height:.85;
+  margin:6px 12px 0 0;
+  color:var(--saffron);
+}
+.article-text h2{
+  font-family:'Sora',sans-serif;
+  font-size:24px;font-weight:800;
+  color:var(--white);letter-spacing:-.5px;
+  margin:36px 0 14px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.article-text blockquote{
+  border-left:3px solid var(--saffron);
+  padding:16px 20px;
+  margin:28px 0;
+  background:rgba(255,107,0,0.05);
+  border-radius:0 8px 8px 0;
+  font-style:italic;
+  font-size:16px;
+  line-height:1.7;
+  color:rgba(255,255,255,0.7);
+}
+
+/* Key Facts Box */
+.key-facts-box{
+  background:var(--dark2);
+  border:1px solid rgba(255,107,0,0.2);
+  border-radius:12px;
+  padding:20px 24px;
+  margin:28px 0;
+}
+.key-facts-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--saffron);
+  font-weight:700;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.key-facts-title::before{content:'★';font-size:12px;}
+.key-facts-grid{
+  display:flex;flex-direction:column;gap:8px;
+}
+.fact-item{
+  display:flex;gap:12px;align-items:flex-start;
+  font-size:13px;color:var(--text);line-height:1.5;
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.fact-item:last-child{border-bottom:none;}
+.fact-key{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--muted);
+  letter-spacing:.05em;white-space:nowrap;
+  flex-shrink:0;padding-top:2px;min-width:120px;
+}
+.fact-val{font-weight:500;color:var(--white);}
+
+/* Share bar */
+.share-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:20px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  margin:32px 0;
+}
+.share-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--muted);
+}
+.share-icon{
+  width:34px;height:34px;border:1px solid var(--border);
+  border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:13px;cursor:pointer;
+  transition:all .2s;color:var(--muted);
+}
+.share-icon:hover{border-color:var(--saffron);color:var(--saffron);}
+
+/* ===== SIDEBAR ===== */
+.article-sidebar{position:sticky;top:72px;}
+
+.sidebar-card{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin-bottom:16px;
+}
+.sidebar-head{
+  padding:13px 16px;border-bottom:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--saffron);font-weight:700;
+}
+
+/* Related items */
+.related-item{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .2s;
+}
+.related-item:last-child{border-bottom:none;}
+.related-item:hover{background:rgba(255,107,0,0.04);}
+.related-cat{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--saffron);margin-bottom:5px;
+}
+.related-title{
+  font-size:13px;font-weight:600;color:var(--text);
+  line-height:1.4;transition:color .2s;
+}
+.related-item:hover .related-title{color:var(--white);}
+.related-date{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--muted);margin-top:4px;
+}
+
+/* Quiz */
+.quiz-q{font-size:13px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:10px;}
+.quiz-opts{display:flex;flex-direction:column;gap:6px;}
+.quiz-opt{
+  font-size:12px;padding:8px 12px;
+  border:1px solid var(--border);border-radius:5px;
+  cursor:pointer;transition:all .15s;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+.quiz-opt:hover{border-color:var(--saffron);color:var(--text);}
+.quiz-opt.correct{border-color:var(--green-light);background:rgba(37,168,106,0.1);color:var(--green-light);}
+.quiz-opt.wrong{border-color:#f87171;background:rgba(239,68,68,0.1);color:#f87171;}
+
+/* ===== MORE ARTICLES ===== */
+.more-section{
+  background:var(--dark2);border-top:1px solid var(--border);
+  padding:48px 32px;
+}
+.more-inner{max-width:1100px;margin:0 auto;}
+.more-heading{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--saffron);margin-bottom:24px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);
+}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.more-card{
+  background:var(--dark3);border:1px solid var(--border);
+  border-radius:10px;padding:18px;cursor:pointer;
+  transition:all .2s;
+}
+.more-card:hover{border-color:rgba(255,107,0,0.3);transform:translateY(-2px);}
+.more-card-cat{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--saffron);margin-bottom:8px;
+}
+.more-card-title{
+  font-size:14px;font-weight:600;color:var(--text);
+  line-height:1.4;margin-bottom:8px;transition:color .2s;
+}
+.more-card:hover .more-card-title{color:var(--white);}
+.more-card-meta{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--muted);
+}
+
+/* Footer mini */
+.mini-footer{
+  background:#080808;border-top:1px solid var(--border);
+  padding:16px 32px;display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--muted);letter-spacing:.05em;
+}
+
+@media(max-width:768px){
+  .article-wrap{grid-template-columns:1fr;gap:28px;padding:28px 20px;}
+  .article-sidebar{position:static;}
+  .hero-content{padding:32px 20px;}
+  .more-grid{grid-template-columns:1fr;}
+  .topbar{padding:10px 20px;}
+  .more-section{padding:32px 20px;}
+  .article-title{font-size:22px;}
+}
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="back-btn" onclick="window.location.href='index.html'">Back to Home</button>
+  <a class="topbar-logo" href="index.html">Odisha<span>Prep</span></a>
+  <button class="share-btn" onclick="shareArticle()">⬆ Share</button>
+</div>
+
+<!-- ARTICLE HERO -->
+<div class="article-hero">
+  <div class="hero-bg-layer" id="heroBg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="article-eyebrow">
+      <span class="article-cat" id="articleCat">Loading</span>
+      <span class="article-imp" id="articleImp"></span>
+    </div>
+    <h1 class="article-title" id="articleTitle">Loading article...</h1>
+    <div class="article-meta">
+      <span class="meta-item" id="articleDate"></span>
+      <span class="meta-dot">•</span>
+      <span class="meta-item">5 min read</span>
+      <span class="meta-dot">•</span>
+      <span class="meta-item">OdishaPrep Current Affairs</span>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE BODY -->
+<div class="article-wrap">
+  <div>
+    <div class="article-text" id="articleContent"></div>
+    <div class="share-bar">
+      <span class="share-label">Share</span>
+      <div class="share-icon" onclick="shareArticle()" title="Share">⬆</div>
+      <div class="share-icon" onclick="copyLink()" title="Copy Link">🔗</div>
+      <div class="share-icon" title="WhatsApp">💬</div>
+      <div class="share-icon" title="Twitter">𝕏</div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="article-sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-head">📰 More CA Stories</div>
+      <div id="relatedList"></div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-head">🎯 Quick Quiz</div>
+      <div style="padding:16px;">
+        <div class="quiz-q" id="quizQ">Loading quiz...</div>
+        <div class="quiz-opts" id="quizOpts"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-card" style="background:linear-gradient(135deg,rgba(255,107,0,0.1),var(--dark2));">
+      <div style="padding:18px;">
+        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:6px;">📥 Daily CA PDF</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">Get today's full current affairs as a printable PDF — free for all aspirants</div>
+        <button style="width:100%;background:var(--saffron);color:var(--dark);border:none;padding:10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:.05em;">⬇ Download PDF</button>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- MORE ARTICLES -->
+<div class="more-section">
+  <div class="more-inner">
+    <div class="more-heading">📚 More from Current Affairs</div>
+    <div class="more-grid" id="moreGrid"></div>
+  </div>
+</div>
+
+<div class="mini-footer">
+  <span>© 2026 OdishaPrep — For Aspirants, By Aspirants 🙏</span>
+  <span>Jai Odisha 🌊</span>
+</div>
+
+<script>
+// ===== SAME caData AS index.html =====
+const caData = {
+  feb: [
+    {
+      date:'Feb 27', title:'Odisha govt launches Subhadra 2.0 — ₹10,000 additional aid for women beneficiaries',
+      desc:'The scheme now covers 1.2 crore women across the state. Amount credited directly via DBT.',
+      tags:['OPSC','OSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">Odisha Chief Minister Mohan Charan Majhi on February 27, 2026 announced the launch of <strong>Subhadra 2.0</strong> — an enhanced version of the state's flagship women welfare scheme — promising an additional ₹10,000 per year to existing beneficiaries, taking the total annual benefit to ₹20,000.</p>
+        <h2>What is the Subhadra Yojana?</h2>
+        <p>Launched in September 2024 by the BJP government in Odisha, the Subhadra Yojana was designed to provide direct financial assistance to women between the ages of 21 and 60 years. Under the original scheme, eligible women received ₹10,000 per year for five years, credited directly to their bank accounts via the Direct Benefit Transfer (DBT) mechanism.</p>
+        <blockquote>"Subhadra Yojana is our promise to Odisha's daughters and sisters. Subhadra 2.0 doubles that promise." — CM Mohan Charan Majhi</blockquote>
+        <h2>What's New in Subhadra 2.0?</h2>
+        <p>Under the upgraded version, eligible beneficiaries will receive an additional ₹10,000 per annum on top of the existing benefit. The total outlay for Subhadra 2.0 is estimated at ₹12,000 crore over five years. The enhanced scheme also expands coverage to include women in the 18–20 age group for the first time.</p>
+        <h2>Key Facts for Exam</h2>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Scheme Name</span><span class="fact-val">Subhadra Yojana 2.0</span></div>
+            <div class="fact-item"><span class="fact-key">Launched By</span><span class="fact-val">CM Mohan Charan Majhi</span></div>
+            <div class="fact-item"><span class="fact-key">Original Launch</span><span class="fact-val">September 17, 2024</span></div>
+            <div class="fact-item"><span class="fact-key">Annual Benefit</span><span class="fact-val">₹20,000/year (₹10K + ₹10K new)</span></div>
+            <div class="fact-item"><span class="fact-key">Coverage</span><span class="fact-val">1.2 crore women across Odisha</span></div>
+            <div class="fact-item"><span class="fact-key">Mode</span><span class="fact-val">DBT to Jan Dhan accounts</span></div>
+            <div class="fact-item"><span class="fact-key">Age Group</span><span class="fact-val">18–60 years (2.0 expanded from 21)</span></div>
+            <div class="fact-item"><span class="fact-key">Total Outlay</span><span class="fact-val">₹12,000 crore (5 years)</span></div>
+            <div class="fact-item"><span class="fact-key">Named After</span><span class="fact-val">Subhadra — sister of Lord Jagannath</span></div>
+          </div>
+        </div>
+        <p>The Subhadra Yojana is one of the most frequently tested topics in Odisha current affairs. Questions appear on the scheme name, launch date, benefit amount, target beneficiaries, and payment mode. Ensure you remember all key figures above.</p>
+      `
+    },
+    {
+      date:'Feb 26', title:'Odisha steel output crosses 15 Million Tonne milestone — 35% of India\'s total steel',
+      desc:'Angul, Jharsuguda and Rourkela districts contribute the maximum. Record high for Odisha.',
+      tags:['OPSC','OSSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">Odisha has crossed a historic milestone in steel production, achieving an output of <strong>15 Million Tonnes (MT)</strong> in the financial year 2025–26 — making it the single largest steel-producing state in India with a 35% share of the country's total steel output.</p>
+        <h2>Key Steel Hubs in Odisha</h2>
+        <p>Three districts drive the bulk of Odisha's steel production: <strong>Angul</strong> (home to NALCO, IFFCO and several private steel plants), <strong>Jharsuguda</strong> (major hub for sponge iron and power steel), and <strong>Rourkela</strong> (SAIL's Rourkela Steel Plant — one of India's oldest integrated steel plants, established 1955).</p>
+        <blockquote>"Odisha is the steel backbone of India. This milestone is a testament to our industrial policy." — Industries Minister Sampad Swain</blockquote>
+        <h2>Key Facts for Exam</h2>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Odisha Output</span><span class="fact-val">15 Million Tonnes (FY 2025–26)</span></div>
+            <div class="fact-item"><span class="fact-key">India Share</span><span class="fact-val">35%</span></div>
+            <div class="fact-item"><span class="fact-key">Rourkela Steel Plant</span><span class="fact-val">SAIL — Established 1955</span></div>
+            <div class="fact-item"><span class="fact-key">Major Companies</span><span class="fact-val">SAIL, Tata Steel, JSW, JSPL, BPSL</span></div>
+            <div class="fact-item"><span class="fact-key">Iron Ore Reserves</span><span class="fact-val">~33% of India's total in Odisha</span></div>
+            <div class="fact-item"><span class="fact-key">Mining Districts</span><span class="fact-val">Keonjhar, Sundargarh</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 26', title:'NH-216 four-laning (Bhubaneswar–Berhampur) gets ₹8,400 crore Cabinet approval',
+      desc:'The 175 km stretch will reduce travel time from 4.5 hrs to 2 hrs. Work starts April 2026.',
+      tags:['OSSC'], imp:'med',
+      fullContent:`
+        <p class="drop-cap">The Union Cabinet on February 26 approved a ₹8,400 crore project to four-lane National Highway 216 connecting Bhubaneswar to Berhampur — a 175 km stretch that is one of the most heavily trafficked corridors in coastal Odisha.</p>
+        <h2>Project Details</h2>
+        <p>The project, to be executed by the National Highways Authority of India (NHAI), will convert the existing two-lane highway to a four-lane divided carriageway with service roads. Construction work is scheduled to begin in April 2026 with a completion deadline of 36 months.</p>
+        <h2>Key Facts for Exam</h2>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Highway</span><span class="fact-val">NH-216</span></div>
+            <div class="fact-item"><span class="fact-key">Route</span><span class="fact-val">Bhubaneswar – Berhampur</span></div>
+            <div class="fact-item"><span class="fact-key">Distance</span><span class="fact-val">175 km</span></div>
+            <div class="fact-item"><span class="fact-key">Project Cost</span><span class="fact-val">₹8,400 crore</span></div>
+            <div class="fact-item"><span class="fact-key">Executing Agency</span><span class="fact-val">NHAI</span></div>
+            <div class="fact-item"><span class="fact-key">Time Saved</span><span class="fact-val">4.5 hrs → 2 hrs</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 25', title:'Puri Jagannath Corridor Phase II inaugurated — ₹3,200 crore project',
+      desc:'New facilities include visitor centre, digital museum, rest shelters and expanded prasad distribution.',
+      tags:['OPSC','General'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">Chief Minister Mohan Charan Majhi inaugurated the second phase of the Puri Jagannath Temple Corridor on February 25, 2026 — a ₹3,200 crore infrastructure project that dramatically transforms the approach to one of India's most sacred temples.</p>
+        <h2>What Phase II Includes</h2>
+        <p>Phase II adds a world-class <strong>Pilgrim Visitor Centre</strong> with a capacity for 10,000 visitors, a <strong>Digital Heritage Museum</strong> showcasing 2,000 years of Jagannath culture, 16 rest shelters for devotees across the corridor, an expanded prasad distribution centre, and a dedicated Srimandir Parikrama path of 75 metres width.</p>
+        <blockquote>"Lord Jagannath belongs to the world. This corridor is our offering to every devotee who comes to His feet." — CM Majhi</blockquote>
+        <h2>Key Facts for Exam</h2>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Phase II Cost</span><span class="fact-val">₹3,200 crore</span></div>
+            <div class="fact-item"><span class="fact-key">Phase I Cost</span><span class="fact-val">₹800 crore (completed 2022)</span></div>
+            <div class="fact-item"><span class="fact-key">Temple Century</span><span class="fact-val">12th century, Kalinga architecture</span></div>
+            <div class="fact-item"><span class="fact-key">Rath Yatra</span><span class="fact-val">UNESCO Intangible Cultural Heritage</span></div>
+            <div class="fact-item"><span class="fact-key">Temple Height</span><span class="fact-val">65 metres</span></div>
+            <div class="fact-item"><span class="fact-key">Puri</span><span class="fact-val">One of 4 Hindu Dhams</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 25', title:'Odisha wins Best State Award for MSME Promotion at National SME Conference 2026',
+      desc:'Award received by Industries Minister. Odisha has 23 lakh registered MSMEs.',
+      tags:['OSSC','OSSSC'], imp:'med',
+      fullContent:`
+        <p class="drop-cap">Odisha was conferred the <strong>Best State Award for MSME Promotion</strong> at the National SME Conference 2026 held in New Delhi — recognising the state's outstanding contribution to Micro, Small and Medium Enterprise development.</p>
+        <h2>Odisha's MSME Landscape</h2>
+        <p>Odisha currently has <strong>23 lakh registered MSMEs</strong> employing over 55 lakh people. The sector contributes approximately 28% of Odisha's GSDP. Key clusters: handloom textiles (Sonepur), seafood processing (Berhampur), engineering goods (Cuttack, Bhubaneswar).</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OSSC / OSSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Registered MSMEs</span><span class="fact-val">23 lakh</span></div>
+            <div class="fact-item"><span class="fact-key">Employment</span><span class="fact-val">55 lakh people</span></div>
+            <div class="fact-item"><span class="fact-key">GSDP Share</span><span class="fact-val">~28%</span></div>
+            <div class="fact-item"><span class="fact-key">Key Policy</span><span class="fact-val">Odisha MSME Development Policy 2022</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 24', title:'Odisha Panchayati Raj (Amendment) Bill 2026 passed — ward members increased from 9 to 11',
+      desc:'Amendment also mandates 50% reservation for women in gram panchayat executive roles.',
+      tags:['OPSC','OSSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">The Odisha Legislative Assembly on February 24 passed the <strong>Odisha Panchayati Raj (Amendment) Bill 2026</strong>, introducing significant changes to local self-governance — increasing ward members and strengthening women's representation.</p>
+        <h2>Key Amendments</h2>
+        <p>Ward members per gram panchayat: 9 → 11. Women reservation in executive posts: 50%. New recall mechanism allowing voters to remove elected reps after 2 years via no-confidence motion.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Ward Members</span><span class="fact-val">9 → 11 per Gram Panchayat</span></div>
+            <div class="fact-item"><span class="fact-key">Women Reservation</span><span class="fact-val">50% (executive posts)</span></div>
+            <div class="fact-item"><span class="fact-key">Total GPs in Odisha</span><span class="fact-val">6,798</span></div>
+            <div class="fact-item"><span class="fact-key">Constitutional Basis</span><span class="fact-val">Article 243 (73rd Amendment)</span></div>
+            <div class="fact-item"><span class="fact-key">Odisha PR Act</span><span class="fact-val">1964</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 24', title:'Odisha 1st state to achieve 100% piped water in all tribal districts — Centre certifies',
+      desc:'All 7 tribal-majority districts fully covered under Jal Jeevan Mission.',
+      tags:['OPSC','OSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">The Union Ministry of Jal Shakti has officially certified Odisha as the <strong>first state in India</strong> to achieve 100% piped water supply coverage across all its tribal-majority districts under the Jal Jeevan Mission.</p>
+        <h2>Districts Covered</h2>
+        <p>All seven: <strong>Koraput, Malkangiri, Rayagada, Nabarangpur, Sundargarh, Kandhamal</strong> and <strong>Kalahandi</strong> — every household now has a Functional Household Tap Connection (FHTC) at 55 litres per capita per day.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Achievement</span><span class="fact-val">1st state — 100% piped water in tribal districts</span></div>
+            <div class="fact-item"><span class="fact-key">Scheme</span><span class="fact-val">Jal Jeevan Mission (JJM) — launched 2019</span></div>
+            <div class="fact-item"><span class="fact-key">Standard</span><span class="fact-val">55 LPCD (litres per capita per day)</span></div>
+            <div class="fact-item"><span class="fact-key">Districts</span><span class="fact-val">7 tribal-majority districts</span></div>
+            <div class="fact-item"><span class="fact-key">Scheduled Tribes</span><span class="fact-val">62 in Odisha; 22.8% of population</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 23', title:'Mahanadi basin gets ₹1,200 crore flood management upgrade — 48 new embankments',
+      desc:'Project targets 12 high-risk districts. Completion expected by 2028.',
+      tags:['OSSSC'], imp:'med',
+      fullContent:`
+        <p class="drop-cap">The Odisha government sanctioned a ₹1,200 crore <strong>Mahanadi Basin Flood Management Project</strong> with 48 new embankments across 12 high-risk districts along the river.</p>
+        <h2>Why Mahanadi Floods Matter</h2>
+        <p>The Mahanadi is Odisha's largest river — originates in Chhattisgarh, flows 494 km through Odisha before meeting the Bay of Bengal near Paradip. Its delta is home to over 1 crore people.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OSSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Project Cost</span><span class="fact-val">₹1,200 crore</span></div>
+            <div class="fact-item"><span class="fact-key">New Embankments</span><span class="fact-val">48</span></div>
+            <div class="fact-item"><span class="fact-key">Mahanadi Length</span><span class="fact-val">858 km total; 494 km in Odisha</span></div>
+            <div class="fact-item"><span class="fact-key">Origin</span><span class="fact-val">Sihawa, Chhattisgarh</span></div>
+            <div class="fact-item"><span class="fact-key">Meets Sea At</span><span class="fact-val">Paradip (Bay of Bengal)</span></div>
+            <div class="fact-item"><span class="fact-key">Hirakud Dam</span><span class="fact-val">World's longest earthen dam — 4.8 km (1957)</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 23', title:'Odisha Budget 2026–27 — ₹2.65 lakh crore outlay; education & health get highest allocation',
+      desc:'Education: ₹42,000 crore. Health: ₹28,000 crore. Fiscal deficit: 2.9% GSDP.',
+      tags:['OPSC','OSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">Finance Minister Bikram Kumar Arukha presented the <strong>Odisha State Budget 2026–27</strong> — total outlay ₹2.65 lakh crore, the largest in Odisha's history at 14% growth over last year.</p>
+        <h2>Key Allocations</h2>
+        <p><strong>Infrastructure:</strong> ₹58,000 crore &nbsp;|&nbsp; <strong>Education:</strong> ₹42,000 crore (+18%) &nbsp;|&nbsp; <strong>Health:</strong> ₹28,000 crore (+22%) &nbsp;|&nbsp; <strong>Agriculture:</strong> ₹18,000 crore</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Total Outlay</span><span class="fact-val">₹2.65 lakh crore</span></div>
+            <div class="fact-item"><span class="fact-key">Finance Minister</span><span class="fact-val">Bikram Kumar Arukha</span></div>
+            <div class="fact-item"><span class="fact-key">Fiscal Deficit</span><span class="fact-val">2.9% of GSDP</span></div>
+            <div class="fact-item"><span class="fact-key">Capital Expenditure</span><span class="fact-val">₹72,000 crore (27% of total)</span></div>
+            <div class="fact-item"><span class="fact-key">Revenue Surplus</span><span class="fact-val">₹8,200 crore</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Feb 22', title:'Odisha Olympic Association announces ₹5 crore fund for athletes — 2028 Olympics prep',
+      desc:'Focus on hockey, athletics, archery and weightlifting. 200 athletes to get international coaching.',
+      tags:['General'], imp:'low',
+      fullContent:`
+        <p class="drop-cap">The Odisha Olympic Association (OOA) announced a <strong>₹5 crore Athletes Development Fund</strong> for 200 young sportspersons preparing for the 2028 Los Angeles Olympics.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Fund</span><span class="fact-val">₹5 crore</span></div>
+            <div class="fact-item"><span class="fact-key">Target</span><span class="fact-val">2028 Los Angeles Olympics</span></div>
+            <div class="fact-item"><span class="fact-key">Focus Sports</span><span class="fact-val">Hockey, Athletics, Archery, Weightlifting</span></div>
+            <div class="fact-item"><span class="fact-key">Hockey World Cup</span><span class="fact-val">2018 & 2023 — hosted by Odisha</span></div>
+          </div>
+        </div>
+      `
+    },
+  ],
+  jan: [
+    {
+      date:'Jan 31', title:'Odisha\'s first Semiconductor Plant — ₹3,800 crore by TechCore India in Bhubaneswar',
+      desc:'12,000 direct and 40,000 indirect jobs. Production starts 2028.',
+      tags:['OPSC','OSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">Odisha's first <strong>Semiconductor Manufacturing Plant</strong> approved in Bhubaneswar Smart City zone — ₹3,800 crore investment by TechCore India Limited. Production starts 2028, 50,000 wafers/month at full capacity.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners for OPSC / OSSC</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Investment</span><span class="fact-val">₹3,800 crore</span></div>
+            <div class="fact-item"><span class="fact-key">Company</span><span class="fact-val">TechCore India Limited</span></div>
+            <div class="fact-item"><span class="fact-key">Location</span><span class="fact-val">Bhubaneswar Smart City Zone</span></div>
+            <div class="fact-item"><span class="fact-key">Direct Jobs</span><span class="fact-val">12,000</span></div>
+            <div class="fact-item"><span class="fact-key">Indirect Jobs</span><span class="fact-val">40,000</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Jan 28', title:'Republic Day 2026 — Odisha tableau "Rath Yatra: Unity in Devotion" in top 5',
+      desc:'Featured authentic Puri chariot craftsmanship from 28 state entries at Kartavya Path.',
+      tags:['General','OPSC'], imp:'med',
+      fullContent:`
+        <p class="drop-cap">Odisha's Republic Day 2026 tableau ranked <strong>top 5</strong> among 28 states at Kartavya Path — showcasing "Rath Yatra: Unity in Devotion" with a 1:3 scale replica of Lord Jagannath's Nandighosha chariot by Puri's Maharana artisans.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">Key Facts</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Tableau Theme</span><span class="fact-val">Rath Yatra: Unity in Devotion</span></div>
+            <div class="fact-item"><span class="fact-key">Chariot Name</span><span class="fact-val">Nandighosha (Lord Jagannath's chariot)</span></div>
+            <div class="fact-item"><span class="fact-key">Ranking</span><span class="fact-val">Top 5 among 28 states</span></div>
+            <div class="fact-item"><span class="fact-key">Rath Yatra</span><span class="fact-val">UNESCO Intangible Cultural Heritage</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Jan 25', title:'Odisha signs MoU with Asian Development Bank — ₹6,200 crore for urban infrastructure',
+      desc:'10 cities including Cuttack, Rourkela, Berhampur, Sambalpur to benefit.',
+      tags:['OPSC','OSSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">Odisha signed a landmark MoU with the <strong>Asian Development Bank (ADB)</strong> for ₹6,200 crore urban infrastructure across 10 cities: Cuttack, Rourkela, Berhampur, Sambalpur, Puri, Balasore, Baripada, Jeypore, Brahmapur, Bhawanipatna.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">Key Facts</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Amount</span><span class="fact-val">₹6,200 crore</span></div>
+            <div class="fact-item"><span class="fact-key">Cities Covered</span><span class="fact-val">10</span></div>
+            <div class="fact-item"><span class="fact-key">ADB HQ</span><span class="fact-val">Manila, Philippines</span></div>
+            <div class="fact-item"><span class="fact-key">India in ADB</span><span class="fact-val">Founding member (1966)</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Jan 20', title:'Chilika Lake sets flamingo record — 1.2 lakh flamingos in bird count 2026',
+      desc:'Total 10.8 lakh migratory birds. Asia\'s largest brackish water lagoon.',
+      tags:['OPSC','General'], imp:'med',
+      fullContent:`
+        <p class="drop-cap">Chilika Lake annual bird count 2026 recorded <strong>1.2 lakh flamingos</strong> (historic high) and 10.8 lakh total migratory birds from 172 species.</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">Key Facts — Chilika Lake</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Type</span><span class="fact-val">Brackish water lagoon (Asia's largest)</span></div>
+            <div class="fact-item"><span class="fact-key">Area</span><span class="fact-val">~1,100 sq km</span></div>
+            <div class="fact-item"><span class="fact-key">Districts</span><span class="fact-val">Puri, Khordha, Ganjam</span></div>
+            <div class="fact-item"><span class="fact-key">Ramsar Site</span><span class="fact-val">1981 (India's first)</span></div>
+            <div class="fact-item"><span class="fact-key">Flamingo Count 2026</span><span class="fact-val">1.2 lakh (record)</span></div>
+            <div class="fact-item"><span class="fact-key">Special Species</span><span class="fact-val">Irrawaddy dolphins</span></div>
+          </div>
+        </div>
+      `
+    },
+    {
+      date:'Jan 15', title:'Odisha launches "Mukhyamantri Krishi Udyog Yojana" — ₹500 crore for agri-entrepreneurs',
+      desc:'Loans up to ₹25 lakh at 4% interest. Target: 10,000 youth beneficiaries.',
+      tags:['OPSC','OSSC','OSSSC'], imp:'high',
+      fullContent:`
+        <p class="drop-cap">CM Mohan Charan Majhi launched the <strong>Mukhyamantri Krishi Udyog Yojana</strong> — ₹500 crore scheme providing loans up to ₹25 lakh at 4% interest for agri-entrepreneurship among youth (age 18–40).</p>
+        <div class="key-facts-box">
+          <div class="key-facts-title">One-Liners — All Exams</div>
+          <div class="key-facts-grid">
+            <div class="fact-item"><span class="fact-key">Scheme</span><span class="fact-val">Mukhyamantri Krishi Udyog Yojana</span></div>
+            <div class="fact-item"><span class="fact-key">Launch Date</span><span class="fact-val">January 15, 2026</span></div>
+            <div class="fact-item"><span class="fact-key">Outlay</span><span class="fact-val">₹500 crore</span></div>
+            <div class="fact-item"><span class="fact-key">Max Loan</span><span class="fact-val">₹25 lakh at 4% interest</span></div>
+            <div class="fact-item"><span class="fact-key">Target</span><span class="fact-val">10,000 beneficiaries</span></div>
+            <div class="fact-item"><span class="fact-key">Age</span><span class="fact-val">18–40 years</span></div>
+          </div>
+        </div>
+      `
+    },
+  ]
+};
+
+// Quizzes per article index
+const quizzes = {
+  'feb-0': {q:'Under Subhadra 2.0, what is the total annual benefit?', opts:['₹5,000','₹10,000','₹20,000','₹25,000'], ans:2},
+  'feb-1': {q:'What percentage of India\'s steel does Odisha produce?', opts:['20%','25%','30%','35%'], ans:3},
+  'feb-2': {q:'What is the total length of NH-216 (Bhubaneswar–Berhampur)?', opts:['125 km','150 km','175 km','200 km'], ans:2},
+  'feb-3': {q:'Jagannath Temple Puri was built in which century?', opts:['9th','10th','11th','12th'], ans:3},
+  'feb-4': {q:'How many MSMEs are registered in Odisha?', opts:['10 lakh','15 lakh','23 lakh','30 lakh'], ans:2},
+  'feb-5': {q:'After amendment, how many ward members in a Gram Panchayat?', opts:['7','9','11','13'], ans:2},
+  'feb-6': {q:'What is the water supply standard under JJM?', opts:['40 LPCD','45 LPCD','55 LPCD','70 LPCD'], ans:2},
+  'feb-7': {q:'Hirakud Dam is located on which river?', opts:['Brahmani','Mahanadi','Baitarani','Subarnarekha'], ans:1},
+  'feb-8': {q:'Who presented Odisha Budget 2026-27?', opts:['CM Majhi','Sampad Swain','Bikram Arukha','Suresh Pujari'], ans:2},
+  'feb-9': {q:'Where are the 2028 Olympics being held?', opts:['Paris','Tokyo','Los Angeles','Brisbane'], ans:2},
+  'jan-0': {q:'Where is Odisha\'s first semiconductor plant coming up?', opts:['Cuttack','Rourkela','Puri','Bhubaneswar'], ans:3},
+  'jan-1': {q:'What is the name of Lord Jagannath\'s chariot?', opts:['Taladhwaja','Darpadalana','Nandighosha','Devadalana'], ans:2},
+  'jan-2': {q:'ADB headquarters is located in?', opts:['Tokyo','Bangkok','Manila','Singapore'], ans:2},
+  'jan-3': {q:'Chilika Lake was designated a Ramsar site in which year?', opts:['1975','1981','1990','2002'], ans:1},
+  'jan-4': {q:'Under Mukhyamantri Krishi Udyog Yojana, max loan amount is?', opts:['₹10 lakh','₹15 lakh','₹20 lakh','₹25 lakh'], ans:3},
+};
+
+// ===== LOAD ARTICLE =====
+const params = new URLSearchParams(window.location.search);
+const month = params.get('month') || 'feb';
+const idx = parseInt(params.get('id') || 0);
+const story = (caData[month] || caData.feb)[idx];
+
+if (story) {
+  // Page title
+  document.title = story.title + ' — OdishaPrep';
+
+  // Hero
+  document.getElementById('articleTitle').textContent = story.title;
+  document.getElementById('articleDate').textContent = story.date + ', 2026';
+  document.getElementById('articleImp').textContent =
+    story.imp === 'high' ? '🔴 High Importance' :
+    story.imp === 'med' ? '🟡 Medium Importance' : '🔵 General';
+
+  // Category tags
+  const catEl = document.getElementById('articleCat');
+  const firstTag = story.tags[0].toLowerCase();
+  catEl.textContent = story.tags.join(' · ');
+  catEl.className = 'article-cat cat-' +
+    (firstTag === 'opsc' ? 'opsc' : firstTag === 'ossc' ? 'ossc' : firstTag === 'osssc' ? 'osssc' : 'general');
+
+  // Hero background
+  const bgs = {
+    opsc: 'linear-gradient(135deg,#0D0D0D 0%,#1a0800 50%,#0D0D0D 100%)',
+    ossc: 'linear-gradient(135deg,#0D0D0D 0%,#001a0a 50%,#0D0D0D 100%)',
+    osssc: 'linear-gradient(135deg,#0D0D0D 0%,#1a1500 50%,#0D0D0D 100%)',
+    general: 'linear-gradient(135deg,#0D0D0D 0%,#001020 50%,#0D0D0D 100%)'
+  };
+  document.getElementById('heroBg').style.background = bgs[firstTag] || bgs.general;
+
+  // Article content
+  document.getElementById('articleContent').innerHTML = story.fullContent || `<p class="drop-cap">${story.desc}</p>`;
+
+  // Related sidebar — show 4 other articles from same month
+  const allStories = caData[month] || caData.feb;
+  const related = allStories.filter((_,i) => i !== idx).slice(0,4);
+  document.getElementById('relatedList').innerHTML = related.map((s,i) => {
+    const ri = allStories.indexOf(s);
+    return `
+      <div class="related-item" onclick="location.href='odisha-article.html?month=${month}&id=${ri}'">
+        <div class="related-cat">${s.tags[0]}</div>
+        <div class="related-title">${s.title}</div>
+        <div class="related-date">${s.date}</div>
+      </div>`;
+  }).join('');
+
+  // Quiz
+  const qKey = month + '-' + idx;
+  const quiz = quizzes[qKey] || quizzes['feb-0'];
+  document.getElementById('quizQ').textContent = quiz.q;
+  document.getElementById('quizOpts').innerHTML = quiz.opts.map((o,i) => `
+    <div class="quiz-opt" onclick="checkQ(this,${i},${quiz.ans},this.parentElement)">
+      ${String.fromCharCode(65+i)}. ${o}
+    </div>`).join('');
+
+  // More articles grid — 3 random others
+  const more = allStories.filter((_,i)=>i!==idx).slice(0,3);
+  document.getElementById('moreGrid').innerHTML = more.map((s,i)=>{
+    const mi = allStories.indexOf(s);
+    return `
+      <div class="more-card" onclick="location.href='odisha-article.html?month=${month}&id=${mi}'">
+        <div class="more-card-cat">${s.tags[0]} · ${s.date}</div>
+        <div class="more-card-title">${s.title}</div>
+        <div class="more-card-meta">${s.imp==='high'?'🔴 High Importance':s.imp==='med'?'🟡 Medium':'🔵 General'}</div>
+      </div>`;
+  }).join('');
+}
+
+function checkQ(el, selected, correct, parent) {
+  if (parent.querySelector('.correct')) return;
+  parent.querySelectorAll('.quiz-opt').forEach((o,i) => {
+    if (i === correct) o.classList.add('correct');
+    else if (o === el && selected !== correct) o.classList.add('wrong');
+  });
+}
+
+function shareArticle() {
+  if (navigator.share) {
+    navigator.share({ title: document.title, url: window.location.href });
+  } else { copyLink(); }
+}
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href)
+    .then(() => alert('🔗 Link copied!'));
+}
+
+// Reading progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('readingProgress').style.width = (document.documentElement.scrollTop / h * 100) + '%';
+});
+
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+</script>
+</body>
+</html>
